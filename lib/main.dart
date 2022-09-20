@@ -51,9 +51,34 @@ class MyApp extends StatelessWidget {
       ), */
 
       /* -------------buoc 2.2----------- */
-      home: const SafeArea(
+      /* home: const SafeArea(
         child: OrdersScreen(),
-      ),
+      ), */
+
+      /* -------------buoc 2.3_dinh tuyen----------- */
+      home: const ProductsOverviewScreen(),
+      routes: {
+        CartScreen.routeName:
+          (ctx) => const CartScreen(),
+        OrdersScreen.routeName:
+          (ctx) => const OrdersScreen(),
+        UserProductsScreen.routeName:
+          (ctx) => const UserProductsScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == ProductDetailScreen.routeName) {
+          final productId = settings.arguments as String;
+          return MaterialPageRoute(
+            builder: (ctx) {
+              return ProductDetailScreen(
+                ProductsManager().findById(productId),
+              );
+            }
+          );
+        }
+
+        return null;
+      },
     );
   }
 }
