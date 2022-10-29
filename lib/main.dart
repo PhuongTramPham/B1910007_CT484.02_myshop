@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:myshop/ui/screens.dart';
+// import 'package:myshop/ui/screens.dart';
 import 'package:provider/provider.dart';
 /* import 'package:myshop/ui/products/product_overview_screen.dart';
 import 'package:myshop/ui/products/user_products_screen.dart';
@@ -29,19 +29,25 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthManager()
         ),
 
+        ChangeNotifierProxyProvider<AuthManager, ProductsManager>(
+          create: (ctx) => ProductsManager(),
+          update: (ctx, authManager, productsManager) {
+            // khi authManager co bao hieu thay doi thi doc lai authToken cho productManager
+            productsManager!.authToken = authManager.authToken;
+            return productsManager;
+          },
+        ),
+        
         ChangeNotifierProvider(
-          create: (context) => ProductsManager(),
+          create: (ctx) => CartManager(),
         ),
         ChangeNotifierProvider(
-          create: (context) => CartManager(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => OrdersManager(),
+          create: (ctx) => OrdersManager(),
         )
       ],
       
       child: Consumer<AuthManager>(
-        builder: ((ctx, authManager, child) {
+        builder: (ctx, authManager, child) {
           return MaterialApp(
             title: 'My Shop',
             debugShowCheckedModeBanner: false,
@@ -128,7 +134,7 @@ class MyApp extends StatelessWidget {
               return null;
             },
           );
-        }),
+        },
       ),
     );
   }
