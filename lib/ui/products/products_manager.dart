@@ -52,6 +52,15 @@ class ProductsManager with ChangeNotifier {
     }
   }
 
+  Future<void> toggleFavoriteStatus(Product product) async {
+    final savedStatus = product.isFavorite;
+    product.isFavorite = !savedStatus;
+
+    if (!await _productsService.saveFavoriteStatus(product)) {
+      product.isFavorite = savedStatus;
+    }
+  }
+
   final List<Product> _items = [
 /*     Product(
       id: 'p1',
@@ -122,10 +131,10 @@ class ProductsManager with ChangeNotifier {
     }
   } */
 
-  void toggleFavoriteStatus(Product product) {
+  /* void toggleFavoriteStatus(Product product) {
     final sevedStatus = product.isFavorite;
     product.isFavorite = !sevedStatus;
-  }
+  } */
 
   /* void deleteProduct(String id) {
     final index = _items.indexWhere((item) => item.id == id);
