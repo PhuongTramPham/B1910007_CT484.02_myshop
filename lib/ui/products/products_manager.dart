@@ -30,6 +30,28 @@ class ProductsManager with ChangeNotifier {
     }
   }
 
+  Future<void> updateProduct(Product product) async{
+    final index = _items.indexWhere((item) => item.id == product.id );
+    if(index >= 0){
+      if(await _productsService.updateProduct(product)) {
+        _items[index] = product;
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> deleteProduct(String id) async {
+    final index = _items.indexWhere((item) => item.id == id );
+    Product? existingProduct = _items[index];
+    _items.removeAt(index);
+    notifyListeners();
+
+    if(!await _productsService.deleteProduct(id)){
+      _items.insert(index, existingProduct);
+      notifyListeners();
+    }
+  }
+
   final List<Product> _items = [
 /*     Product(
       id: 'p1',
@@ -92,22 +114,24 @@ class ProductsManager with ChangeNotifier {
     notifyListeners();
   } */
 
-  void updateProduct(Product product) {
+  /* void updateProduct(Product product) {
     final index = _items.indexWhere((item) => item.id == product.id);
     if (index >= 0) {
       _items[index] = product;
       notifyListeners();
     }
-  }
+  } */
 
   void toggleFavoriteStatus(Product product) {
     final sevedStatus = product.isFavorite;
     product.isFavorite = !sevedStatus;
   }
 
-  void deleteProduct(String id) {
+  /* void deleteProduct(String id) {
     final index = _items.indexWhere((item) => item.id == id);
     _items.removeAt(index);
     notifyListeners();
-  }
+  } */
+
+
 }
